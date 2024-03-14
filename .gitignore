@@ -1,0 +1,5 @@
+# ignora todos los archivos de sqlite3
+*.sqlite3
+
+# ignora todas las carpeta de __pycache__
+**/__pycache__/ 

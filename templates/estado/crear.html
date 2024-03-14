@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>Estado crear</h1>
+
+    <form method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+
+        {{ form|crispy }}
+
+        <input type="submit" value="Guardar">
+        <a href="{% url 'estado' %}" class="btn btn-secondary">Volver</a>
+    </form>
+
+{% endblock%}

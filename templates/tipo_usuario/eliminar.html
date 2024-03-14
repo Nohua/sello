@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="center">
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<h2>Borrar Estado</h2>
+		<p>Estas seguro <span>borrar</span> el Tipo de Usuario Sello de "{{object}}"?</p>
+		<p class="form-buttons">
+			<input type="submit" class="btn btn-primary" value="Borrar">
+			<a href="{% url 'tipo-usuario' %}" class="btn btn-outline">Cancelar</a>
+		</p>
+	</form>
+</div>
+
+{%endblock content%}

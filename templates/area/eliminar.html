@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="center">
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<h2>Borrar Area</h2>
+		<p>Estas seguro <span>borrar</span> el area "{{object}}"?</p>
+		<p class="form-buttons">
+			<input type="submit" class="btn btn-primary" value="Borrar">
+			<a href="{% url 'area' %}" class="btn btn-outline">Cancelar</a>
+		</p>
+	</form>
+</div>
+
+{%endblock content%}

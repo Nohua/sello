@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <h1>Periodo Listar</h1>
+
+    <div class="col text-end">
+        <a href="{% url 'periodo-crear' %}" 
+            class="btn btn-success" role="button"
+            data-toggle="tooltip" title="Agregar"">
+            <i class="fa-regular fa-square-plus"></i>
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Usuario Sello</th>
+            <th scope="col">Año</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+            <tr>
+                <th scope="row"></th>
+                <td>{{ obj.usuario_sello }}</td>
+                <td>{{ obj.year }}</td>
+                <td>
+                    <a href="{% url 'periodo-editar' pk=obj.pk %}" 
+                        class="btn btn-info" role="button"
+                        data-toggle="tooltip" title="Editar"">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>
+                    <a href="{% url 'periodo-borrar' pk=obj.pk %}" 
+                        class="btn btn-danger" role="button"
+                        data-toggle="tooltip" title="Borrar"">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        
+        </tbody>
+      </table>
+    
+{% endblock%}
