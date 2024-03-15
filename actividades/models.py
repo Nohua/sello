@@ -23,8 +23,7 @@ class TipoUsuarioSello(models.Model):
     
 
 class UsuarioSello(models.Model):
-    usuario_sello = models.ForeignKey(TipoUsuarioSello, 
-                                             on_delete=models.PROTECT)
+    usuario_sello = models.ForeignKey(TipoUsuarioSello, on_delete=models.PROTECT)
     nombre_usuario = models.CharField(max_length=255)
 
     def __str__(self):
@@ -36,7 +35,7 @@ class Periodo(models.Model):
     year = models.IntegerField()
 
     def __str__(self):
-        return self.usuario_sello.nombre_usuario
+        return str(self.year)
 
 
 class Alumno(models.Model):
@@ -68,11 +67,8 @@ class ActividadSello(models.Model):
 
 class MatriculaActividad(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.PROTECT)
-    actividad_sello = models.ForeignKey(ActividadSello, 
-                                        on_delete=models.PROTECT)
-    fecha_inscripcion = models.DateField()
+    actividad_sello = models.ForeignKey(ActividadSello, on_delete=models.PROTECT)
+    fecha_inscripcion = models.DateField(auto_now_add=True)
     
     def __str__(self):
-        nom_matricula = "(0) - (1)".format(self.alumno.nombre, 
-                                           self.actividad_sello.nombre)
-        return nom_matricula
+        return f"{self.alumno.nombre} - {self.actividad_sello.nombre}"

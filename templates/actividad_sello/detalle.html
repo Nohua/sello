@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+
+{% block content %}
+
+    <h1 class="mb-5">Actividad Sello <small class="text-muted">{{ object }}</small></h1>
+
+    <div class="row mb-5">
+        <h4>Información de la actividad</h4>
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>Área de la actividad</th>
+                        <td>{{ object.area }}</td>
+                    </tr>
+                    <tr>
+                        <th>Colaborador</th>
+                        <td>{{ object.usuario_sello }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de inicio</th>
+                        <td>{{ object.fecha_inicio|naturalday }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de término</th>
+                        <td>{{ object.fecha_fin|naturalday }}</td>
+                    </tr>
+                    <tr>
+                        <th>Horas de la actividad</th>
+                        <td>{{ object.horas }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <p><strong>Descripción</strong></p>
+            <p>{{ object.descripcion }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <h4 class="col-md-6">Alumnos inscritos</h4>
+        <div class="col-md-6 row">
+            <h6 class="col-md-3">Inscribir alumnos</h6>
+            <form class="form-inline col-md" action="{% url 'inscribir-alumnos' object.pk %}" method="post">
+                <div class="row">
+                    <div class="col-md">
+                        {% crispy formulario_alumnos %}
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary btn-sm">Inscribir</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Facultad</th>
+                <th>Carrera</th>
+                <th class="text-center">Opciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ma in object.matriculaactividad_set.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ ma.alumno.nombre }}</td>
+                    <td>{{ ma.alumno.facultad }}</td>
+                    <td>{{ ma.alumno.carrera }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'desinscribir-alumno' ma.id %}" class="btn btn-danger" title="Desinscribir"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock%}
