@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="center">
-	<form method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		<h2>Borrar Actividad Sello</h2>
-		<p>Estas seguro <span>borrar</span> la actividad sello de "{{object}}"?</p>
+    <form class="pt-5" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2><i class="fa fa-remove text-danger"></i> Borrar Actividad Sello</h2>
+        <p>¿Estas seguro <span>borrar</span> la actividad sello de "{{object}}"?</p>
         <br>
-		<p class="form-buttons">
-			<input type="submit" class="btn btn-primary" value="Borrar">
-			<a href="{% url 'actividad-sello' %}" class="btn btn-secondary">Cancelar</a>
-		</p>
-	</form>
-</div>
+        <p class="form-buttons">
+            <input type="submit" class="btn btn-primary btn-danger" value="Borrar">
+            <a href="{% url 'actividad-sello' %}" class="btn btn-secondary">Cancelar</a>
+        </p>
+    </form>
 
 {% endblock content %}

@@ -4,10 +4,10 @@
 <div class="center">
 	<form method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		<h2>Borrar Estado</h2>
+		<h2><i class="fa fa-remove text-danger"></i> Borrar Estado</h2>
 		<p>Estas seguro <span>borrar</span> el Tipo de Usuario Sello de "{{object}}"?</p>
 		<p class="form-buttons">
-			<input type="submit" class="btn btn-primary" value="Borrar">
+			<input type="submit" class="btn btn-primary btn-danger" value="Borrar">
 			<a href="{% url 'tipo-usuario' %}" class="btn btn-outline">Cancelar</a>
 		</p>
 	</form>
