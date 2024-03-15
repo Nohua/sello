@@ -1,6 +1,12 @@
-from django.shortcuts import render
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Field
+from django.db.models import Q
+from django.shortcuts import render, redirect
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.contrib import messages
+
+from .forms import MatriculaActividadForm, ActividadSelloFiltro
 from .models import *
 
 
@@ -204,18 +210,119 @@ Vistas para Actividad Sello
 class ActividadSelloListarView(generic.ListView):
     """Listar las actividades sellos"""
     model = ActividadSello
-    context_object_name = 'objects'
-    queryset = ActividadSello.objects.all()
     template_name = 'actividad_sello/listar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ActividadSelloListarView, self).get_context_data(**kwargs)
+        context['formulario_filtro'] = ActividadSelloFiltro(self.request.GET)
+
+        estado_id = self.request.GET.get('estados')
+        periodo_id = self.request.GET.get('periodos')
+        search = self.request.GET.get('search')
+        print(self.request.GET)
+        if estado_id:
+            estado = Estado.objects.get(id=estado_id)
+            context['object_list'] = context['object_list'].filter(estado=estado)
+        if periodo_id:
+            periodo = Periodo.objects.get(id=periodo_id)
+            context['object_list'] = context['object_list'].filter(periodo=periodo)
+        if search:
+            context['object_list'] = context['object_list'].filter(
+                Q(nombre__icontains=search) |
+                Q(descripcion__icontains=search) |
+                Q(area__nombre__icontains=search) |
+                Q(usuario_sello__nombre_usuario__icontains=search)
+            )
+            context['search'] = search
+        return context
+
+
+class ActividadSelloDetalleView(generic.DetailView):
+    model = ActividadSello
+    template_name = 'actividad_sello/detalle.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ActividadSelloDetalleView, self).get_context_data(**kwargs)
+        context['formulario_alumnos'] = MatriculaActividadForm(
+            anio = self.object.periodo.year,
+            actividad_pk = self.object.pk
+        )
+        return context
+
+
+def inscribir_alumnos(request, pk_actividad):
+    actividad = ActividadSello.objects.get(pk=pk_actividad)
+    if request.method == 'POST':
+        alumnos = request.POST.getlist('alumnos')
+        inscritos_nuevos = 0
+        for id_alumno in alumnos:
+            alumno = Alumno.objects.get(id=id_alumno)
+            matricula_alumno, created = MatriculaActividad.objects.get_or_create(
+                alumno=alumno,
+                actividad_sello=actividad
+            )
+            if created:
+                inscritos_nuevos += 1
+
+        messages.success(request, f"Se han inscrito {inscritos_nuevos} alumnos nuevos")
+
+    return redirect('actividad-sello-detalle', actividad.pk)
+
+
+def desinscribir_alumno(request, matricula_id):
+    matricula = MatriculaActividad.objects.get(id=matricula_id)
+    actividad = matricula.actividad_sello
+
+    try:
+        matricula.delete()
+        messages.success(request, f"El alumno se ha desinscrito")
+    except:
+        messages.warning(request, f"NO se ha podido realizar la operación")
+
+    return redirect('actividad-sello-detalle', actividad.pk)
 
 
 class ActividadSelloCrearView(generic.CreateView):
     """Crear una actividad sello"""
     model = ActividadSello
     fields = ['usuario_sello', 'periodo', 'area', 'estado', 'nombre', 
-                'fecha_inicio', 'fecha_fin', 'descripcion']
+                'fecha_inicio', 'fecha_fin', 'horas', 'descripcion']
     template_name = 'actividad_sello/crear.html'
     success_url = '/actividad_sello/'
+
+    def get_form(self, form_class=None):
+        form = super(ActividadSelloCrearView, self).get_form(form_class)
+        form.helper = FormHelper()
+        form.helper.form_tag = False
+        form.helper.layout = Layout(
+            Div(
+                Div(Field('nombre'), css_class='col-md-6'),
+                Div(Field('area', css_class='form-control'), css_class='col-md-6'),
+                css_class="row"
+            ),
+            Div(
+                Div(Field('usuario_sello', css_class='form-control'), css_class='col-md-4'),
+                Div(Field('periodo', css_class='form-control'), css_class='col-md-4'),
+                Div(Field('estado', css_class='form-control'), css_class='col-md-4'),
+                css_class="row"
+            ),
+            Div(
+                Div(Field('fecha_inicio'), css_class='col-md-4'),
+                Div(Field('fecha_fin'), css_class='col-md-4'),
+                Div(Field('horas'), css_class='col-md-4'),
+                css_class="row"
+            ),
+            'descripcion'
+        )
+        return form
+
+    def get_success_url(self):
+        return reverse(
+            'actividad-sello-detalle',
+            kwargs={
+                'pk': self.object.pk,
+            }
+        )
 
 
 class ActividadSelloEditarView(generic.UpdateView):
@@ -225,6 +332,40 @@ class ActividadSelloEditarView(generic.UpdateView):
                 'fecha_inicio', 'fecha_fin', 'descripcion']
     template_name = 'actividad_sello/actualizar.html'
     success_url = '/actividad_sello/'
+
+    def get_form(self, form_class=None):
+        form = super(ActividadSelloEditarView, self).get_form(form_class)
+        form.helper = FormHelper()
+        form.helper.form_tag = False
+        form.helper.layout = Layout(
+            Div(
+                Div(Field('nombre'), css_class='col-md-6'),
+                Div(Field('area', css_class='form-control'), css_class='col-md-6'),
+                css_class="row"
+            ),
+            Div(
+                Div(Field('usuario_sello', css_class='form-control'), css_class='col-md-4'),
+                Div(Field('periodo', css_class='form-control'), css_class='col-md-4'),
+                Div(Field('estado', css_class='form-control'), css_class='col-md-4'),
+                css_class="row"
+            ),
+            Div(
+                Div(Field('fecha_inicio'), css_class='col-md-4'),
+                Div(Field('fecha_fin'), css_class='col-md-4'),
+                Div(Field('horas'), css_class='col-md-4'),
+                css_class="row"
+            ),
+            'descripcion'
+        )
+        return form
+
+    def get_success_url(self):
+        return reverse(
+            'actividad-sello-detalle',
+            kwargs={
+                'pk': self.object.pk,
+            }
+        )
 
 
 class ActividadSelloBorrarView(generic.DeleteView):

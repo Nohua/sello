@@ -3,12 +3,12 @@
 
 {% block content %}
 
-    <h1>Actividad Sello crear</h1>
+    <h1>Crear actividad sello</h1>
 
     <form method="POST" enctype="multipart/form-data" >
         {% csrf_token %}
 
-        {{ form|crispy }}
+        {% crispy form %}
 
         <br>
         <input class="btn btn-primary" type="submit" value="Guardar">

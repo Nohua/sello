@@ -1,62 +1,84 @@
 {% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 
 {% block content %}
-
-    <h1>Actividad Sello Listar</h1>
-
-    <div class="col text-end">
-        <a href="{% url 'actividad-sello-crear' %}" 
-            class="btn btn-success" role="button"
-            data-toggle="tooltip" title="Agregar"">
-            <i class="fa-regular fa-square-plus"></i>
+    <h1 class="mb-5">Actividad Sello Listar
+        <a href="{% url 'actividad-sello-crear' %}"
+           class="btn btn-success text-end" role="button"
+           data-toggle="tooltip" title="Agregar">
+            <i class="fa-regular fa-plus"></i>
+            Agregar nuevo
         </a>
+    </h1>
+    <div class="mb-5">
+        <form action="." method="get" class="form-inline">
+            <div class="row">
+                <div class="col-md-3">
+                    {{ formulario_filtro.estados }}
+                </div>
+                <div class="col-md-3">
+                    {{ formulario_filtro.periodos }}
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="search" value="{{ search }}">
+                </div>
+                <div class="col-md">
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-search"></i> Filtar</button>
+                </div>
+            </div>
+        </form>
     </div>
     <table class="table">
         <thead>
-          <tr>
+        <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
             <th scope="col">Usuario Sello</th>
             <th scope="col">Estado</th>
             <th scope="col">Acciones</th>
-          </tr>
+        </tr>
         </thead>
         <tbody>
-            {% for obj in objects %}
+        {% for obj in object_list %}
             <tr>
-                <th scope="row"></th>
+                <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ obj.nombre }}</td>
                 <td>{{ obj.usuario_sello }}</td>
 
                 {% if obj.estado.nombre == "Pendiente de Aprobación"  %}
-                    <td class="table-secondary">{{ obj.estado }}</td>
+                    <td>{{ obj.estado }}</td>
                 {% elif obj.estado.nombre == "Rechazada" %}
-                    <td class="table-danger">{{ obj.estado }}</td>
+                    <td class="text-danger">{{ obj.estado }}</td>
                 {% elif obj.estado.nombre == "En Curso" or obj.estado.nombre == "Finalizada"%}
-                    <td class="table-primary">{{ obj.estado }}</td>
+                    <td class="text-success">{{ obj.estado }}</td>
                 {% elif obj.estado.nombre == "Pendiente de Cierre" %}
-                    <td class="table-warning">{{ obj.estado }}</td>
+                    <td class="text-warning">{{ obj.estado }}</td>
+                {% else %}
+                    <td class="text-warning">Estado no reconocido</td>
                 {% endif %}
                 <td>
-                        <!-- Aca va el href para mas detalle de la info de la actividad-->
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                    <a href="{% url 'actividad-sello-detalle' pk=obj.pk %}"
+                       class="btn btn-primary" role="button"
+                       data-toggle="tooltip" title="Detalle">
+                        <i class="fa-solid fa-eye"></i>
                     </a>
-                    <a href="{% url 'actividad-sello-editar' pk=obj.pk %}" 
-                        class="btn btn-info" role="button"
-                        data-toggle="tooltip" title="Editar"">
+                    <a href="{% url 'actividad-sello-editar' pk=obj.pk %}"
+                       class="btn btn-info" role="button"
+                       data-toggle="tooltip" title="Editar">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>
-                    <a href="{% url 'actividad-sello-borrar' pk=obj.pk %}" 
-                        class="btn btn-danger" role="button"
-                        data-toggle="tooltip" title="Borrar"">
+                    <a href="{% url 'actividad-sello-borrar' pk=obj.pk %}"
+                       class="btn btn-danger" role="button"
+                       data-toggle="tooltip" title="Borrar">
                         <i class="fa-regular fa-trash-can"></i>
                     </a>
                 </td>
             </tr>
-            {% endfor %}
-        
+        {% endfor %}
+
         </tbody>
-      </table>
-    
+    </table>
+
 {% endblock%}
