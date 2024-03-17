@@ -1,7 +1,10 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import *
 
 urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
     # rutas para las vistas de areas
     path('area/', AreaListarView.as_view(), name='area'),
     path('area/crear', AreaCrearView.as_view(), name='area-crear'),
@@ -75,4 +78,19 @@ urlpatterns = [
     path('actividad_sello/desinscribir-alumnos/<int:matricula_id>',
          desinscribir_alumno,
          name='desinscribir-alumno'),
+    # rutas para las vistas de alumnos
+    path('alumno/', AlumnoListarView.as_view(), name='alumno'),
+    path('alumno/crear', AlumnoCrearView.as_view(), name='alumno-crear'), 
+    path('alumno/cargar', carga_alumno, name='cargar-alumno'),
+    path('alumno/editar/<int:pk>',
+          AlumnoEditarView.as_view(),
+          name='alumno-editar'),
+    path('alumno/borrar/<int:pk>',
+          AlumnoBorrarView.as_view(),
+          name='alumno-borrar'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, 
+                              document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL,
+                              document_root=settings.STATIC_ROOT)

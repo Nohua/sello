@@ -5,9 +5,16 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.contrib import messages
-
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 from .forms import MatriculaActividadForm, ActividadSelloFiltro
 from .models import *
+from django.shortcuts import render
+from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator
+
+from .alumnos_carga import CargaAlumno
+from django.core.paginator import Paginator
 
 
 """
@@ -19,6 +26,7 @@ class AreaListarView(generic.ListView):
     context_object_name = 'objects'
     queryset = Area.objects.all()
     template_name = 'area/listar.html'
+    paginate_by = 10
 
 
 class AreaCrearView(generic.CreateView):
@@ -57,6 +65,7 @@ class EstadoListarView(generic.ListView):
     context_object_name = 'objects'
     queryset = Estado.objects.all()
     template_name = 'estado/listar.html'
+    paginate_by = 10
 
 
 class EstadoCrearView(generic.CreateView):
@@ -95,6 +104,7 @@ class TipoUsuarioListarView(generic.ListView):
     context_object_name = 'objects'
     queryset = TipoUsuarioSello.objects.all()
     template_name = 'tipo_usuario/listar.html'
+    paginate_by = 10
 
 
 class TipoUsuarioCrearView(generic.CreateView):
@@ -134,6 +144,7 @@ class UsuarioSelloListarView(generic.ListView):
     context_object_name = 'objects'
     queryset = UsuarioSello.objects.all()
     template_name = 'usuario_sello/listar.html'
+    paginate_by = 10
 
 
 class UsuarioSelloCrearView(generic.CreateView):
@@ -173,6 +184,7 @@ class PeriodoListarView(generic.ListView):
     context_object_name = 'objects'
     queryset = Periodo.objects.all()
     template_name = 'periodo/listar.html'
+    paginate_by = 10
 
 
 class PeriodoCrearView(generic.CreateView):
@@ -211,6 +223,7 @@ class ActividadSelloListarView(generic.ListView):
     """Listar las actividades sellos"""
     model = ActividadSello
     template_name = 'actividad_sello/listar.html'
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(ActividadSelloListarView, self).get_context_data(**kwargs)
@@ -378,3 +391,66 @@ class ActividadSelloBorrarView(generic.DeleteView):
         messages.success(self.request,
                             "Actividad sello eliminado de manera correcta.")
         return super(ActividadSelloBorrarView, self).form_valid(form)
+    
+
+"""
+Vistas para Alumnos
+"""
+class AlumnoListarView(generic.ListView):
+    """Listar los alumnos"""
+    model = Alumno
+    context_object_name = 'objects'
+    queryset = Alumno.objects.all()
+    template_name = 'alumno/listar.html'
+    paginate_by = 5
+
+
+class AlumnoCrearView(generic.CreateView):
+    """Crear un alumno"""
+    model = Alumno
+    fields = ['rut', 'nombre', 'facultad', 'carrera', 'horas_year', 'creditos']
+    template_name = 'alumno/crear.html'
+    success_url = '/alumno/'
+
+
+class AlumnoEditarView(generic.UpdateView):
+    """Actualizar un alumno"""
+    model = Alumno
+    fields = ['rut', 'nombre', 'facultad', 'carrera', 'horas_year', 'creditos']
+    template_name = 'alumno/actualizar.html'
+    success_url = '/alumno/'
+
+
+class AlumnoBorrarView(generic.DeleteView):
+    """Eliminar un alumno"""
+    model = Alumno
+    template_name = 'alumno/eliminar.html'
+    success_url = '/alumno/'
+
+    def form_valid(self, form):
+        messages.success(self.request,
+                            "Alumno eliminado de manera correcta.")
+        return super(AlumnoBorrarView, self).form_valid(form)
+
+
+def carga_alumno(request):
+    if request.method == 'POST' and request.FILES['archivo']:
+        archivo = request.FILES['archivo']
+        fs = FileSystemStorage()
+        nombre_archivo = fs.save(archivo.name, archivo)
+        new_path = settings.MEDIA_ROOT + "\\" + nombre_archivo
+        print(nombre_archivo)
+        #carga_archivo_url = fs.url(nombre_archivo)
+        carga_nueva = CargaAlumno()
+        carga_nueva.carga_de_informacion(new_path)
+        print('archivo cargado')
+        return redirect('alumno',)
+
+    return render(request, 'alumno/carga_alumno.html', {})
+
+
+"""
+Home Page
+"""
+class HomePageView(generic.TemplateView):
+    template_name = 'home.html'

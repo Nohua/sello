@@ -4,14 +4,22 @@
 
 
 {% block content %}
-    <h1 class="mb-5">Actividad Sello Listar
-        <a href="{% url 'actividad-sello-crear' %}"
-           class="btn btn-success text-end" role="button"
-           data-toggle="tooltip" title="Agregar">
-            <i class="fa-regular fa-plus"></i>
-            Agregar nuevo
-        </a>
-    </h1>
+    <br><br>
+    <div class="row">
+        <div class="col text-start">
+            <h1 >Actividad Sello Listar</h1>
+        </div>
+        <div class="col text-end">
+            <a href="{% url 'actividad-sello-crear' %}"
+            class="btn btn-success text-end" role="button"
+            data-toggle="tooltip" title="Agregar">
+                <i class="fa-regular fa-plus"></i>
+                Agregar Nuevo
+            </a>
+        </div>
+        <br>
+    </div>
+
     <div class="mb-5">
         <form action="." method="get" class="form-inline">
             <div class="row">
@@ -80,5 +88,6 @@
 
         </tbody>
     </table>
+    <!-- Pega desde aca el paginador  -->
 
 {% endblock%}

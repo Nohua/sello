@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>Carga de archivo</h1>
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <br>
+            <div class="col-6">
+                <label for="formFile" class="form-label">Cargar archivo .xlsx</label>
+                <input class="form-control" type="file" id="archivo" name="archivo" required>
+            </div>
+            <br>
+            <input class="btn btn-primary" type="submit" value="Guardar">
+            <a href="{% url 'estado' %}" class="btn btn-secondary">Volver</a>
+        </form>
+    </div>
+
+{% endblock%}

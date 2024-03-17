@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>Alumno crear</h1>
+
+    <form method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+
+        {{ form|crispy }}
+        <br>
+        <input class="btn btn-primary" type="submit" value="Guardar">
+        <a href="{% url 'alumno' %}" class="btn btn-secondary">Volver</a>
+    </form>
+
+{% endblock%}

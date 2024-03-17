@@ -9,7 +9,7 @@
         <a href="{% url 'usuario-sello-crear' %}" 
             class="btn btn-success" role="button"
             data-toggle="tooltip" title="Agregar"">
-            <i class="fa-regular fa-square-plus"></i>
+            <i class="fa-solid fa-plus"></i> Agregar Nuevo
         </a>
     </div>
     <table class="table">
@@ -24,7 +24,7 @@
         <tbody>
             {% for obj in objects %}
             <tr>
-                <th scope="row"></th>
+                <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ obj.nombre_usuario }}</td>
                 <td>{{ obj.usuario_sello }}</td>
                 <td>
@@ -43,6 +43,30 @@
             {% endfor %}
         
         </tbody>
-      </table>
+    </table>
+    <div class="pagination d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+                    {% endif %}
+            
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item page-link active" aria-current="page"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li><a class="page-item page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
     
 {% endblock%}

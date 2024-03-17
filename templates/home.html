@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div></div>
+    <div class="col-sm-5">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-center">
+                    <h3>Actividades Sello</h3>
+                </div>
+                <br>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'actividad-sello'%}">
+                        <img class="justify-content-center" src="{% static 'img/editar-documento.png' %}" alt="actividad-sello"
+                            width="250" height="200">
+                    </a>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-center">
+                    <h3> Alumnos</h3>
+                </div>
+                <br>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'alumno' %}">
+                        <img src="{% static 'img/mujer.png' %}" alt="actividad-sello"
+                            width="250" height="200">
+                    </a>    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+{% endblock%}

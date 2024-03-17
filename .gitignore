@@ -3,3 +3,6 @@
 
 # ignora todas las carpeta de __pycache__
 **/__pycache__/ 
+
+# ignorar todas los archivos .xlsx
+*.xlsx

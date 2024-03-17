@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,25 +10,41 @@
     <title>Gestion de Actividades</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg  navbar-light" style="background-color: #94cdf5;">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fa-solid fa-building-columns"></i>
+          </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="{% url 'area' %}">Area</a>
-              <a class="nav-link" href="{% url 'estado' %}">Estado</a>
-              <a class="nav-link" href="#">Pricing</a>
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'actividad-sello' %}">Actividades</a>
+              <a class="nav-link" href="{% url 'alumno' %}">Alumno</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Mantenedores
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #94cdf5;">
+                  <li><a class="dropdown-item" href="{% url 'area' %}">Area</a></li>
+                  <li><a class="dropdown-item" href="{% url 'estado' %}">Estado</a></li>
+                  <li><a class="dropdown-item" href="{% url 'tipo-usuario' %}">Tipo de Usuarios</a></li>
+                  <li><a class="dropdown-item" href="{% url 'usuario-sello' %}">Usuarios Sello</a></li>
+                  <li><a class="dropdown-item" href="{% url 'periodo' %}">Periodo</a></li>
+                </ul>
+              </li>
             </div>
           </div>
         </div>
       </nav>
+      <br><br>
       <div class="container">
         <div class="row">
+          <br>
+          <br>  
             {% block content %}
+            
 
             {% endblock %}
     
@@ -44,4 +61,8 @@
         });
     </script>
 </body>
+
+<!-- Acuerdate del foooter-->
+<a href="https://www.flaticon.es/iconos-gratis/gorro-de-graduacion" title="gorro-de-graduacion iconos">Gorro-de-graduacion iconos creados por Freepik - Flaticon</a>
+
 </html>

@@ -39,12 +39,12 @@ class Periodo(models.Model):
 
 
 class Alumno(models.Model):
+    rut = models.CharField(max_length=10)
     nombre = models.CharField(max_length=255)
     facultad = models.CharField(max_length=125)
     carrera = models.CharField(max_length=125)
-    year = models.IntegerField()
+    horas_year = models.JSONField()
     creditos = models.IntegerField()
-    horas = models.IntegerField()
 
     def __str__(self):
         return self.nombre

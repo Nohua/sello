@@ -3,35 +3,57 @@
 
 {% block content %}
 
-    <h1>AREA Listar</h1>
+    <h1>Alumnos Listar</h1>
 
     <div class="col text-end">
-        <a href="{% url 'area-crear' %}" 
+        
+        <a href="{% url 'cargar-alumno' %}" 
             class="btn btn-success" role="button"
             data-toggle="tooltip" title="Agregar"">
-            <i class="fa-solid fa-plus"></i> Agregar Nuevo
+            <i class="fa-solid fa-plus"></i> Agregar desde Excel
+        </a>
+        <a href="{% url 'alumno-crear' %}" 
+            class="btn btn-success" role="button"
+            data-toggle="tooltip" title="Agregar"">
+            <i class="fa-solid fa-plus"></i> Agregar Manual
         </a>
     </div>
     <table class="table">
         <thead>
           <tr>
             <th scope="col">#</th>
+            <th scope="col">RUT</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Facultad</th>
+            <th scope="col">Carrera</th>
+            <th scope="col">Horas</th>
+            <th scope="col">Credito</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
-            {% for obj in objects %}
+            {% for obj in page_obj %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ obj.rut }}</td>
                 <td>{{ obj.nombre }}</td>
+                <td>{{ obj.facultad }}</td>
+                <td>{{ obj.carrera }}</td>
                 <td>
-                    <a href="{% url 'area-editar' pk=obj.pk %}" 
+                    <ul class="list-unstyled">
+                        {% for clave, valor in obj.horas_year.items %}
+                        <li>{{ clave }}: {{ valor }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>{{ obj.creditos }}</td> 
+                <td>
+                    <a href="{% url 'alumno-editar' pk=obj.pk %}" 
                         class="btn btn-info" role="button"
                         data-toggle="tooltip" title="Editar"">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>
-                    <a href="{% url 'area-borrar' pk=obj.pk %}" 
+                    <a href="{% url 'alumno-borrar' pk=obj.pk %}" 
                         class="btn btn-danger" role="button"
                         data-toggle="tooltip" title="Borrar"">
                         <i class="fa-regular fa-trash-can"></i>
@@ -42,7 +64,7 @@
         
         </tbody>
       </table>
-    <div class="pagination d-flex justify-content-center">
+      <div class="pagination d-flex justify-content-center">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
                 {% if is_paginated %}
@@ -66,5 +88,5 @@
             </ul>
         </nav>
     </div>
-    
+
 {% endblock%}
